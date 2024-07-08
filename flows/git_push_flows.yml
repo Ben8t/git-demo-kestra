@@ -1,0 +1,20 @@
+id: git_push_flows
+namespace: kestra.weather.prod
+description: Push flows to Git repository
+
+labels:
+  env: dev
+  project: weather
+
+tasks:
+
+  - id: git_push
+    type: io.kestra.plugin.git.PushFlows
+    includeChildNamespaces: true
+    gitDirectory: flows
+    url: https://github.com/Ben8t/weather-kestra
+    username: Ben8t
+    branch: dev
+    sourceNamespace: kestra.weather.dev
+    targetNamespace: kestra.weather.prod
+    dryRun: false
