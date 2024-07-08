@@ -41,3 +41,20 @@ tasks:
             FROM clean
             ;
         store: true
+
+      - id: csv_writer
+        type: io.kestra.plugin.serdes.csv.IonToCsv
+        from: "{{ outputs.query.uri }}"
+
+  - id: train
+    type: io.kestra.plugin.scripts.python.Commands
+    namespaceFiles:
+      enabled: true
+    inputFiles:
+      training_data.csv: "{{ outputs.csv_writer.uri }}"
+    outputFiles:
+      - model.pkl
+    beforeCommands:
+      - pip install pandas scikit-learn
+    commands:
+      - python script/train.py

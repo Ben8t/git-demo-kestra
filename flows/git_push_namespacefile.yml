@@ -1,0 +1,13 @@
+id: git_push_namespacefile
+namespace: kestra.weather.prod
+
+tasks:
+
+  - id: git_push
+    type: io.kestra.plugin.git.PushNamespaceFiles
+    namespace: "{{ flow.namespace}}.ml"
+    url: https://github.com/Ben8t/weather-kestra
+    username: Ben8t
+    branch: dev
+    dryRun: false
+    gitDirectory: script
