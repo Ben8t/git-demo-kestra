@@ -48,6 +48,10 @@ tasks:
 
   - id: train
     type: io.kestra.plugin.scripts.python.Commands
+    warningOnStdErr: false
+    docker: 
+      image: python
+      pullPolicy: NEVER
     namespaceFiles:
       enabled: true
     inputFiles:
@@ -55,6 +59,6 @@ tasks:
     outputFiles:
       - model.pkl
     beforeCommands:
-      - pip install pandas scikit-learn
+      - pip3 install pandas scikit-learn==1.4.0
     commands:
-      - python script/train.py
+      - python train.py
