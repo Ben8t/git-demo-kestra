@@ -1,0 +1,12 @@
+id: ask_user_name
+namespace: company
+
+inputs:
+  - id: name
+    type: STRING
+    displayName: Your name
+
+tasks:
+  - id: hello
+    type: io.kestra.plugin.core.log.Log
+    message: "Hello {{ inputs.name }}"
