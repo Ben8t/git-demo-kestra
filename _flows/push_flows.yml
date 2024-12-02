@@ -1,0 +1,14 @@
+id: push_flows
+namespace: company
+
+tasks:
+  - id: git
+    type: io.kestra.plugin.git.PushFlows
+    sourceNamespace: company
+    targetNamespace: company
+    flows: "*"
+    url: https://github.com/Ben8t/git-demo-kestra
+    branch: test
+    username: Ben8t
+    password: "{{ secret('GH_TOKEN') }}"
+    dryRun: false

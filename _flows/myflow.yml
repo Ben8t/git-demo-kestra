@@ -1,0 +1,22 @@
+id: myflow
+namespace: company
+
+tasks:
+  - id: hello
+    type: io.kestra.plugin.core.log.Log
+    message: Hello World! 🚀
+
+triggers:
+  - id: alert_on_failure
+    type: io.kestra.plugin.core.trigger.Flow
+    states:
+      - FAILED
+      - WARNING
+    preconditions:
+      id: company_namespace
+      where:
+        - id: company
+          filters:
+            - field: NAMESPACE
+              type: STARTS_WITH
+              value: company"""
