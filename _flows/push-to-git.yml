@@ -1,0 +1,33 @@
+id: push-to-git
+namespace: company.prod
+
+tasks:
+
+  - id: push_flows
+    type: io.kestra.plugin.git.PushFlows
+    sourceNamespace: "company.dev"
+    targetNamespace: "company.prod"
+    flows: "*"
+    includeChildNamespaces: true
+    gitDirectory: "_flows"
+    url: "https://github.com/Ben8t/git-demo-kestra"
+    username: "Ben8t"
+    password: "{{ secret('GH_TOKEN') }}"
+    branch: test_bis
+    dryRun: false
+
+  - id: push_namespaces
+    type: io.kestra.plugin.core.flow.ForEach
+    values: ["company.dev.unit1", "company.dev.unit2"]
+    tasks:
+
+    - id: push_namespace_files
+      type: io.kestra.plugin.git.PushNamespaceFiles
+      namespace: "{{ taskrun.value }}"
+      files: "*"
+      gitDirectory: "{{'_files/' ~ taskrun.value}}"
+      url: "https://github.com/Ben8t/git-demo-kestra"
+      username: "Ben8t"
+      password: "{{ secret('GH_TOKEN') }}"
+      branch: test_bis
+      dryRun: false
