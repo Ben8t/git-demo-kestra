@@ -24,7 +24,7 @@ tasks:
     - id: push_namespace_files
       type: io.kestra.plugin.git.PushNamespaceFiles
       namespace: "{{ taskrun.value }}"
-      files: "*"
+      files: "**"
       gitDirectory: "{{'_files/' ~ taskrun.value}}"
       url: "https://github.com/Ben8t/git-demo-kestra"
       username: "Ben8t"
