@@ -1,0 +1,72 @@
+id: push-to-git
+namespace: company.prod}
+
+inputs:
+  - id: sourceNamespace
+    type: STRING
+    required: true
+    defaults: company.dev
+  - id: targetNamespace
+    type: STRING
+    required: true
+    defaults: company.prod
+  - id: gitUrl
+    type: STRING
+    required: true
+    defaults: "https://github.com/Ben8t/git-demo-kestra"
+  - id: gitUsername
+    type: STRING
+    required: true
+    defaults: "Ben8t"
+  - id: branchFlows
+    type: STRING
+    required: true
+    defaults: test_bis2
+  - id: branchNamespaceFiles
+    type: STRING
+    required: true
+    defaults: test_bis2
+  - id: commitMessageFlows
+    type: STRING
+    required: false
+    defaults: "add flows {{ now() }}"
+  - id: commitMessageNamespaceFiles
+    type: STRING
+    required: false
+    defaults: "add namespace files {{ now() }}"
+  - id: dryRun
+    type: BOOLEAN
+    required: false
+    defaults: false
+
+
+tasks:
+
+  - id: push_flows
+    type: io.kestra.plugin.git.PushFlows
+    sourceNamespace: "{{ inputs.sourceNamespace }}"
+    targetNamespace: "{{ inputs.targetNamespace}}}"
+    flows: "*"
+    includeChildNamespaces: true
+    gitDirectory: "_flows"
+    url: "{{ inputs.gitUrl}}"
+    username: "{{ inputs.gitUsername }}"
+    password: "{{ secret('GH_TOKEN') }}"
+    branch: "{{ inputs.branchFlows }}"
+    dryRun: false
+
+  - id: push_namespaces
+    type: io.kestra.plugin.core.flow.ForEach
+    values: ["company.dev.unit1", "company.dev.unit2"]
+    tasks:
+
+    - id: push_namespace_files
+      type: io.kestra.plugin.git.PushNamespaceFiles
+      namespace: "{{ taskrun.value }}"
+      files: "**"
+      gitDirectory: "{{'_files/' ~ taskrun.value}}"
+      url: "{{ inputs.gitUrl}}"
+      username: "{{ inputs.gitUsername}}"
+      password: "{{ secret('GH_TOKEN') }}"
+      branch: "{{ inputs.branchNamespaceFiles }}"
+      dryRun: false
